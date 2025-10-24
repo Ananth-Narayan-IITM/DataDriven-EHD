@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. $FOAM_SRC/solutionMonitoring/runLock/runLockHead.sh
+. ${WM_PROJECT_DIR:?}/bin/tools/CleanFunctions      # Tutorial clean functions
+#------------------------------------------------------------------------------
+
+cleanCase
+log.*
+rm -rf solutionMonitoring/*.png
+
+rm -rf history
+
+clear
+#------------------------------------------------------------------------------

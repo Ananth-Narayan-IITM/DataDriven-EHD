@@ -1,0 +1,26 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2406                                  |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+FoamFile
+{
+    version         2;
+    format          ascii;
+    class           dictionary;
+    object          ionProperties;
+}
+
+ionDiffusivity  0;
+
+ionMobility     2.68844845627377E-07;
+
+vacuumPermittivity 8.85419e-12;
+
+relativePermittivity 1;
+
+
+// ************************************************************************* //

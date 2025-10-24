@@ -1,0 +1,14 @@
+#!/bin/sh
+
+. $FOAM_SRC/solutionMonitoring/runLock/runLockHead.sh
+#------------------------------------------------------------------------------
+clear
+./Allclean
+blockMesh
+decomposePar
+#python3 $FOAM_SRC/solutionMonitoring/probesMonitoring.py
+time mpirun -np 8 ehdFoam_b0R8 -parallel
+#> 
+#python3 $solutionMonitoring/probesMonitoring.py & time ehdFoam_b0R7
+#------------------------------------------------------------------------------
+. $FOAM_SRC/solutionMonitoring/runLockFoot.sh

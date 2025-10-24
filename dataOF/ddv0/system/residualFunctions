@@ -1,0 +1,17 @@
+// -*- C++ -*-
+residualFunctions
+    {
+        // Mandatory entries (unmodifiable)
+        type            solverInfo;
+        libs            (utilityFunctionObjects);
+
+        // Mandatory entries (runtime modifiable)
+        fields          (p U potentialDifference chargeDensity);
+
+        // Optional entries (runtime modifiable)
+        writeResidualFields true;
+
+    }
+
+
+// ************************************************************************* //

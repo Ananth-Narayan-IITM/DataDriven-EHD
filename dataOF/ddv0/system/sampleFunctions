@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2406                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      sampleFunctions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//chargeDensityC
+//    {
+//	type    exprField;
+//	libs    (fieldFunctionObjects);
+//	field   chargeDensityC;
+
+//	expression  "chargeDensity/7.08e-10";
+//	#include "writeFunctions"
+//	enabled     true;
+//    }
+//
+
+sample
+{
+	type    sets;
+	libs    (sampling);
+	enabled true;
+
+	
+
+	setFormat       raw;
+	interpolationScheme cell;
+	writeControl   timeStep;
+    writeInterval  100;
+
+	purgeWrite      30;
+
+	fields (chargeDensity);
+sets
+{
+    Y1
+    {
+        type        uniform;
+        axis        distance;
+
+        start       (0.302 0 0);
+        end         (0.302 1 0);
+        nPoints     300;
+    }
+}
+}

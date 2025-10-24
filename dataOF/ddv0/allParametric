@@ -1,0 +1,73 @@
+#!/bin/bash
+set -e
+
+./Allclean
+. $FOAM_SRC/solutionMonitoring/runLock/runLockHead.sh
+application="ehdFoam_b0R8"
+action="gridIndependence"
+
+csvFile="parametricStudy/$action.csv"
+mapfile -t header < <(head -n 4 "$csvFile")
+
+IFS=',' read -ra folders <<< "${header[0]}"
+IFS=',' read -ra files   <<< "${header[1]}"
+IFS=',' read -ra params  <<< "${header[2]}"
+IFS=',' read -ra options <<< "${header[3]}"
+
+numParams=$(( ${#params[@]} + 1 ))
+
+# Save data lines into a temp file
+dataLines=$(mktemp)
+tail -n +5 "$csvFile" > "$dataLines"
+
+# Count total lines for loop
+totalLines=$(wc -l < "$dataLines")
+
+for ((row=1; row<=totalLines; row++)); do
+    line=$(sed -n "${row}p" "$dataLines")
+    IFS=',' read -ra values <<< "$line"
+    fileName="${values[${#values[@]}-1]}"
+    echo "Running case: $fileName"
+
+    for ((i=0; i<numParams; i++)); do
+        folder="${folders[$i]}"
+        file="${files[$i]}"
+        param="${params[$i]}"
+        option="${options[$i]}"
+        value="${values[$i]}"
+        dictPath="$folder/$file"
+
+        if [[ -n "$param" && -n "$value" && -n "$option" ]]; then
+            echo ">> foamDictionary $dictPath -entry $param -set \"$option $value\""
+            foamDictionary "$dictPath" -entry "$param" -set "$option $value"
+        fi
+    done
+
+    blockMesh
+    sleep 2
+    decomposePar
+    sleep 2
+    mpirun -np 12 $application -parallel > log."$application"_"$fileName"
+    sleep 2
+    reconstructPar
+    sleep 2
+    rm -rf processor*
+    sleep 2
+
+    resultDir="parametricStudyFiles/$fileName"
+echo "Saving results to $resultDir"
+mkdir -p "$resultDir"
+sleep 2
+
+# Copy everything including time directories like 1/, 2.5/, 1e-6/ etc.
+rsync -a 0 constant system postProcessing [0-9eE.-]* log.* "$resultDir"/
+
+
+    echo "Completed $fileName"
+    echo ""
+    ./Allclean
+done
+
+rm "$dataLines"
+. $FOAM_SRC/solutionMonitoring/runLock/runLockFoot.sh
+
